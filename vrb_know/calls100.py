@@ -43,9 +43,8 @@ initial_100 = [
     ['kissimmee', 'FL'],
     ['gardiner', 'MT'], # Yellowstone
     ['washington', 'DC'],
-    ['mission beach', 'CA'],
     ['coronado', 'CA'],
-    ['el portal', 'CA'], # Yosemite
+    ['el portal', 'CA'], # Yosemite # Problem
     ['yosemite west', 'CA'], # Yosemite
     ['Anaheim', 'CA'],
     ['myrtle beach', 'SC'],
@@ -57,10 +56,12 @@ initial_100 = [
     ['mount desert', 'ME'], # Acadia
     ['moab', 'UT'], # Arches
     ['hill city', 'SD'], # Badlands
-    ['cimarron', 'CO'], # Black Canyon of the Gunnison
-    ['cannonville', 'UT'], # Bryce Canyon
+    ['cimarron', 'CO'], # Black Canyon of the Gunnison # Problem
+    # n_private_rooms = response['data']['rental_counts']['counts']['private_room']['all']
+    # KeyError: 'private_room'
+    ['cannonville', 'UT'], # Bryce Canyon # PROBLEM
     ['carlsbad', 'NM'], # Carlsbad Caverns
-    ['chiloquin', 'OR'], # Crater Lake
+    ['chiloquin', 'OR'], # Crater Lake # PROBLEM
     ['pahrump', 'NV'], # Death Valley -> Near Las Vegas
     ['key west', 'FL'],
     ['west glacier', 'MT'], # Glacier National Park
@@ -111,11 +112,18 @@ first_100_market_ids = []
 # for market in initial_100:
 #     first_100_market_ids.append(market_search_call(city=market[0], state=market[1]))
 
-print(len(first_100_market_ids))
+# print(len(first_100_market_ids))
 
-row = market_summary_call(58697)
-market_summary_call(58697)
+# row = market_summary_call(58697)
 
+rows = []
 
+for market in initial_100[70:]:
+    try:
+        market_id = market_search_call(market[0], market[1])
+        print(market_id)
+        rows.append(market_summary_call(market_id[0]))
+    except:
+        print(f"Did not work for {market}.")
 
 

@@ -59,23 +59,23 @@ conn.close()
 # )
 
 # Insert
-# VALUES = str(tuple(gat_df_row.values))
-# Q_INSERT_COL_NAMES = """
-# INSERT INTO market_summary (
-# city_id, occ, adr, revenue,
-# total_hosts, superhosts, 
-# multi_unit_hosts, single_unit_hosts,
-# multi_host_properties, total_properties,
-# single_host_properties, available_10_12,
-# available_1_3, available_7_9, available_4_6,
-# booked_10_12, booked_1_3, booked_7_9, 
-# booked_4_6, n_private_rooms, n_rooms_0,
-# n_rooms_1, n_rooms_2, n_rooms_3, n_rooms_4,
-# n_rooms_5plus, tot_count_entire_place,
-# avg_n_rooms, avg_accommodates
-# )
-# VALUES """
-# Q_INSERT_FINAL = Q_INSERT_COL_NAMES + VALUES + ";"
+VALUES = str(tuple(gat_df_row.values))
+Q_INSERT_COL_NAMES = """
+INSERT INTO market_summary (
+city_id, occ, adr, revenue,
+total_hosts, superhosts, 
+multi_unit_hosts, single_unit_hosts,
+multi_host_properties, total_properties,
+single_host_properties, available_10_12,
+available_1_3, available_7_9, available_4_6,
+booked_10_12, booked_1_3, booked_7_9, 
+booked_4_6, n_private_rooms, n_rooms_0,
+n_rooms_1, n_rooms_2, n_rooms_3, n_rooms_4,
+n_rooms_5plus, tot_count_entire_place,
+avg_n_rooms, avg_accommodates
+)
+VALUES """
+Q_INSERT_FINAL = Q_INSERT_COL_NAMES + VALUES + ";"
 
 # CREATE TABLE IF NOT EXISTS 
 # comp_props (

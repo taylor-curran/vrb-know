@@ -41,7 +41,7 @@ def market_search_call(city: str, state: str = '') -> [int, str]:
 
     try:
         response = requests.request("GET", url,  
-                                    params=params).response()
+                                    params=params).json()
     except:
         return "Error Processing Request"
 
@@ -68,10 +68,6 @@ def market_search_call(city: str, state: str = '') -> [int, str]:
 # currency
 
 
-def market_summary_call():
-    # TODO
-    pass
-
 
 def market_summary_call(market_id):
     
@@ -92,6 +88,7 @@ def market_summary_call(market_id):
     # city_id
     
     dfd = {} 
+    
     # Market - Summary - Request_Info
     # COLS: city_id
     city_id = response['request_info']['city_id']
@@ -111,10 +108,11 @@ def market_summary_call(market_id):
     # COLS: total_hosts, superhosts, multi_unit_hosts, single_unit_hosts
     host_counts = response['data']['host_info']['hosts']
     dfd.update(host_counts)
-    # Market - Summary - Data - Host_Info - Hosts
-    # COLS: total_hosts, superhosts, multi_unit_hosts, single_unit_hosts
-    host_counts = response['data']['host_info']['hosts']
-    dfd.update(host_counts)
+    # Market - Summary - Data - Host_Info - Host_Properties
+    # COLS: multi_host_properties, total_properties, single_host_properties
+    property_counts = response['data']['host_info']['host_properties']
+    dfd.update(property_counts)
+    
     # Market - Summary - Data - Rental_Activity - Available
     # COLS:
     # TODO: ?- What is '10-12', '1-3', and such? -?
@@ -142,6 +140,8 @@ def market_summary_call(market_id):
     dfd.update(booked_dict)
     # Market - Summary - Data - Rental Counts - Counts - Private_Room
     # COLS: n_private_rooms
+    
+    # DELETE SINCE LOTS OF PLACES DONT
     n_private_rooms = response['data']['rental_counts']['counts']['private_room']['all']
     dfd.update({'n_private_rooms': n_private_rooms})
     # Market - Summary - Data - Rental Counts - Counts - Entire Place by n_rooms
@@ -158,21 +158,16 @@ def market_summary_call(market_id):
         'tot_count_entire_place': count_by_n_rooms['all'],
                             }
     dfd.update(count_by_n_rooms_dict)
-    # Market - Summary - Data - Rental Counts - Counts - Entire Place by n_rooms
-    # COLS: rms0_rntl_cnt, rms1_rntl_cnt, rms3_rntl_cnt
-    #       rms4_rntl_cnt, rms5plus_rntl_cnt, n_entire_place
-    count_by_n_rooms = response['data']['rental_counts']['counts']['entire_place']
-    count_by_n_rooms_dict = {
-        'n_rooms_0': count_by_n_rooms['0'],
-        'n_rooms_1': count_by_n_rooms['1'],
-        'n_rooms_2': count_by_n_rooms['2'],
-        'n_rooms_3': count_by_n_rooms['3'],
-        'n_rooms_4': count_by_n_rooms['4'],
-        'n_rooms_5plus': count_by_n_rooms['5'],
-        'tot_count_entire_place': count_by_n_rooms['all'],
-                            }
+    # Market - Summary - Data - Rental Counts - Average
+    # COLS: average_n_bedrooms, average_accomodates
+    average = response['data']['rental_counts']['average']
+    average_dict = {
+        'avg_n_rooms': average['bedrooms'],
+        'avg_accommodates': average['accommodates']
+    }
+    dfd.update(average_dict)
 
-    dfd.update(count_by_n_rooms_dict)
+
     row = pd.Series(dfd)
     
     # Load DB Credentials
@@ -218,5 +213,5 @@ def market_summary_call(market_id):
     conn.close()
     
     print('DB Populated with Row!')
-
+    
     
